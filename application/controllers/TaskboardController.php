@@ -128,10 +128,8 @@ class TaskboardController extends Controller
         if ( !$resultUpdate['success'] ) {
             $_SESSION['error_message'] = $resultUpdate['error']['message'];
         } else {
-            $_SESSION['success_message'] = "Задача успешно отредактирована";
+            $_SESSION['success_message'] = "Задача успешно завершена";
         }
-
-        $_SESSION['success_message'] = "Задача успешно завершена";
 
         $this->redirect('/');
     }

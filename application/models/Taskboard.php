@@ -46,7 +46,7 @@ class Taskboard extends Model
             return [
                 'success' => false,
                 'error' => [
-                    'message' => 'Не удалось обновить задачу',
+                    'message' => 'Не удалось завершить задачу',
                 ]
             ];
         }
@@ -86,17 +86,21 @@ class Taskboard extends Model
     }
 
     /**
-     * @param $page
-     * @param $limit
-     * @param string $sort
-     * @param string $dir
+     * получает список задач из базы.
+     * @param $page - номер текущей страницы
+     * @param $limit - количество элементов на странице
+     * @param string $sort - имя поля, по которому будет сортировка
+     * @param string $dir - направление сортировки
      * @return array
      */
     public function getTasks( $page, $limit, $sort = 'id', $dir = 'asc' )
     {
         $start = ($page - 1) * $limit;
         $end = $page * $limit;
-        $stmt = $this->db->query("SELECT * FROM `tasks` ORDER BY {$sort} {$dir} LIMIT {$start},{$end}");
+        $stmt = $this->db->query(
+            "SELECT `id`, `name`, `email`, `description`, `is_edited`, `is_completed` 
+            FROM `tasks` ORDER BY {$sort} {$dir} LIMIT {$start},{$end}"
+        );
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
