@@ -78,16 +78,28 @@ class TaskboardController extends Controller
             $this->redirect('/');
         }
 
+        $id = 0;
+        if ( is_numeric($_POST['id']) ) {
+            $id = intval($_POST['id']);
+        } else {
+            $_SESSION['error_message'] = "Не удалось обновить. Ид задан не корректно";
+            $this->redirect('/');
+        }
+
         $data = [
-            'id'          => $_POST['id'],
+            'id'          => $id,
             'name'        => $_POST['name'],
             'email'       => $_POST['email'],
             'description' => $_POST['description'],
         ];
 
-        $taskboard->update( $data );
+        $resultUpdate = $taskboard->update( $data );
 
-        $_SESSION['success_message'] = "Задача успешно отредактирована";
+        if ( !$resultUpdate['success'] ) {
+            $_SESSION['error_message'] = $resultUpdate['error']['message'];
+        } else {
+            $_SESSION['success_message'] = "Задача успешно отредактирована";
+        }
 
         $this->redirect('/');
     }
@@ -104,7 +116,20 @@ class TaskboardController extends Controller
         /** @var Taskboard $taskboard */
         $taskboard = $this->model('Taskboard');
 
-        $taskboard->setComplete( $_POST['id'] );
+        $id = 0;
+        if ( is_numeric($_POST['id']) ) {
+            $id = intval($_POST['id']);
+        } else {
+            $_SESSION['error_message'] = "Не удалось обновить. Ид задан не корректно";
+            $this->redirect('/');
+        }
+
+        $resultUpdate = $taskboard->setComplete( $id );
+        if ( !$resultUpdate['success'] ) {
+            $_SESSION['error_message'] = $resultUpdate['error']['message'];
+        } else {
+            $_SESSION['success_message'] = "Задача успешно отредактирована";
+        }
 
         $_SESSION['success_message'] = "Задача успешно завершена";
 

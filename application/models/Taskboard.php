@@ -36,18 +36,31 @@ class Taskboard extends Model
 
     /**
      * @param $id
+     * @return array
      */
     public function setComplete( $id )
     {
-        $this->db->query("UPDATE `tasks` SET `is_completed` = 1 WHERE `id` = :id", ['id' => $id]);
+        $stmt = $this->db->query("UPDATE `tasks` SET `is_completed` = 1 WHERE `id` = :id", ['id' => $id]);
+
+        if ( $stmt === FALSE ) {
+            return [
+                'success' => false,
+                'error' => [
+                    'message' => 'Не удалось обновить задачу',
+                ]
+            ];
+        }
+
+        return [ 'success' => true ];
     }
 
     /**
      * @param $data
+     * @return array
      */
     public function update( $data )
     {
-        $this->db->query(
+        $stmt = $this->db->query(
             "UPDATE `tasks` SET 
                  `is_edited` = 1, `name` = :name, 
                  `email` = :email, `description` = :description 
@@ -59,8 +72,26 @@ class Taskboard extends Model
                 'id'            => $data['id'],
             ]
         );
+
+        if ( $stmt === FALSE ) {
+            return [
+                'success' => false,
+                'error' => [
+                    'message' => 'Не удалось обновить задачу',
+                ]
+            ];
+        }
+
+        return [ 'success' => true ];
     }
 
+    /**
+     * @param $page
+     * @param $limit
+     * @param string $sort
+     * @param string $dir
+     * @return array
+     */
     public function getTasks( $page, $limit, $sort = 'id', $dir = 'asc' )
     {
         $start = ($page - 1) * $limit;
@@ -69,6 +100,9 @@ class Taskboard extends Model
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * @return mixed
+     */
     public function getCountTasks()
     {
         $stmt = $this->db->query("SELECT count(*) FROM `tasks`");

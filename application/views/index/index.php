@@ -92,6 +92,8 @@
             <div class="panel-heading">
                 <? if ( $task['is_completed'] ): ?>
                     <span class="btn btn-sm btn-outline-success me-1">Завершено</span>
+                <? else: ?>
+                    <span class="btn btn-sm btn-outline-danger me-1">Не завершено</span>
                 <? endif; ?>
                 <? if ( $task['is_edited'] ): ?>
                     <span class="btn btn-sm btn-outline-warning">Отредактировано</span>
